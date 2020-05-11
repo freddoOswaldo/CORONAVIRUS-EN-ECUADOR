@@ -14,4 +14,10 @@
 
 ### UI CORONAVIRUS EN ECUADOR
 
-![UI](/dashboard.png)
+- ### Dashboard
+
+![UI](/dashboard.png)    
+
+- ### Detalle casos por semana                             
+
+![UI](/detail.jpg)
