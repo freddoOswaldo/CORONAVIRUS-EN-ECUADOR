@@ -3,7 +3,6 @@ import 'package:covid19_model/src/utils/custom_icons.dart';
 import 'package:covid19_model/src/widgets/appBar.dart';
 import 'package:covid19_model/src/widgets/bar_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class DetailPage extends StatelessWidget {
   @override

@@ -1,4 +1,5 @@
-import 'package:covid19_model/src/utils/colors.dart';
+import 'package:covid19_model/src/models/response_model.dart';
+import 'package:covid19_model/src/providers/covid_provider.dart';
 import 'package:covid19_model/src/utils/custom_icons.dart';
 import 'package:covid19_model/src/widgets/appBar.dart';
 import 'package:covid19_model/src/widgets/information_card.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DashboardPage extends StatelessWidget {
+  final CovidProvider _covidProvider = new CovidProvider();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,52 +112,59 @@ class DashboardPage extends StatelessWidget {
         ),
       );
 
-  _buildStatistics() => Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: InformationCard(
-                    title: 'Casos Confirmados',
-                    icon: CustomIcon.virus,
-                    iconColor: Color(0xFFFF8C00),
-                    value: 1345,
-                    tap: () {}),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: InformationCard(
-                    title: 'Total de Recuperados',
-                    icon: CustomIcon.asistencia_sanitaria_y_medica,
-                    value: 1345,
-                    iconColor: Color(0xFFFF2D55),
-                    tap: () {}),
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: InformationCard(
-                    title: 'Total de Muertos',
-                    icon: CustomIcon.lapida_sepulcral,
-                    iconColor: Color(0xFF5856D6),
-                    value: 1345,
-                    tap: () {}),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: InformationCard(
-                    title: 'Nuevos Casos',
-                    icon: CustomIcon.increase,
-                    iconColor: Color(0xFF50E3C5),
-                    value: 1345,
-                    tap: () {}),
-              ),
-            ],
-          )
-        ],
-      );
-
-
+  _buildStatistics() => FutureBuilder<Response>(
+        future: _covidProvider.getCovid(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: InformationCard(
+                          title: 'Casos Confirmados',
+                          icon: CustomIcon.virus,
+                          iconColor: Color(0xFFFF8C00),
+                          value: snapshot.data.cases.total,
+                          tap: () {}),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: InformationCard(
+                          title: 'Total de Recuperados',
+                          icon: CustomIcon.asistencia_sanitaria_y_medica,
+                          value: snapshot.data.cases.recovered,
+                          iconColor: Color(0xFFFF2D55),
+                          tap: () {}),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: InformationCard(
+                          title: 'Total de Muertos',
+                          icon: CustomIcon.lapida_sepulcral,
+                          iconColor: Color(0xFF5856D6),
+                          value: snapshot.data.deaths.total,
+                          tap: () {}),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: InformationCard(
+                          title: 'Nuevos Casos',
+                          icon: CustomIcon.increase,
+                          iconColor: Color(0xFF50E3C5),
+                          value: snapshot.data.cases.casesNew==null?0:int.parse(snapshot.data.cases.casesNew),
+                          tap: () {}),
+                    ),
+                  ],
+                )
+              ],
+            );
+          } else {
+            return Container(alignment: Alignment.center,height: 200,child:CircularProgressIndicator());
+          }
+        });
+  
 }
